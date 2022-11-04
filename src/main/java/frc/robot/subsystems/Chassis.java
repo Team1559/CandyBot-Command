@@ -9,14 +9,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Chassis extends SubsystemBase {
-
+    private static final int LEFT_DRIVE_MOTOR  = 1;
+    private static final int RIGHT_DRIVE_MOTOR = 7;
     private DifferentialDrive differential;
 
     /** Creates a new ExampleSubsystem. */
     public Chassis() {
-        // WPI_TalonSRX leftMotor = new WPI_TalonSRX(Wiring.LEFT_DRIVE_MOTOR);
-        // WPI_TalonSRX rightMotor = new WPI_TalonSRX(Wiring.RIGHT_DRIVE_MOTOR);
-        // differential = new DifferentialDrive(leftMotor, rightMotor);
+        WPI_TalonSRX leftMotor = new WPI_TalonSRX(LEFT_DRIVE_MOTOR);
+          WPI_TalonSRX rightMotor = new WPI_TalonSRX(RIGHT_DRIVE_MOTOR);
+         differential = new DifferentialDrive(leftMotor, rightMotor);
     }
 
     public void drive(double speedY, double steering) {

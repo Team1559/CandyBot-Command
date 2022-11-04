@@ -23,8 +23,8 @@ public class RobotContainer {
     private final Chassis m_ChassisSubsystem = new Chassis();
 
 
-   // private final DriveCommand m_DriveCommand = new DriveCommand(
-           // Chassis);
+    private final DriveCommand m_DriveCommand = new DriveCommand(
+        m_ChassisSubsystem);
             
 
     /**
@@ -33,6 +33,7 @@ public class RobotContainer {
      */
     public RobotContainer() {
         // Configure the button bindings
+        m_ChassisSubsystem.setDefaultCommand(m_DriveCommand);
         configureButtonBindings();
     }
 

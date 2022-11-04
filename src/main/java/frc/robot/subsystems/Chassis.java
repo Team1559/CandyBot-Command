@@ -4,14 +4,29 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class Chassis extends SubsystemBase {
+
+    private DifferentialDrive differential;
+
     /** Creates a new ExampleSubsystem. */
-    public ExampleSubsystem() {}
+    public Chassis() {
+        // WPI_TalonSRX leftMotor = new WPI_TalonSRX(Wiring.LEFT_DRIVE_MOTOR);
+        // WPI_TalonSRX rightMotor = new WPI_TalonSRX(Wiring.RIGHT_DRIVE_MOTOR);
+        // differential = new DifferentialDrive(leftMotor, rightMotor);
+    }
+
+    public void drive(double speedY, double steering) {
+
+        differential.arcadeDrive(speedY, steering);
+    }
 
     @Override
     public void periodic() {
+
         // This method will be called once per scheduler run
     }
 

@@ -6,10 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Chassis;
-
-import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Shooter;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -20,12 +22,11 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
     // The robot's subsystems and commands are defined here...
-    private final Chassis m_ChassisSubsystem = new Chassis();
-
-
-    private final DriveCommand m_DriveCommand = new DriveCommand(
-        m_ChassisSubsystem);
-            
+    private final Chassis chassis;
+    private final DTXboxController controller;
+    private final DriveCommand driveCommand;
+    private final Shooter shooter;
+    private final Command shooterStart;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -33,8 +34,19 @@ public class RobotContainer {
      */
     public RobotContainer() {
         // Configure the button bindings
-        m_ChassisSubsystem.setDefaultCommand(m_DriveCommand);
+        controller = new DTXboxController(0);
+        chassis = new Chassis();
+        driveCommand = new DriveCommand(chassis, controller);
+        shooter = new Shooter();
+        shooterStart = new RunCommand(shooter::shooterStart, shooter);
+        chassis.setDefaultCommand(driveCommand);
+        controller.aButton.whenPressed(shooterStart);
+        Button speedUp = new Button(() -> controller.getDpad() == 0);
+        speedUp.whenPressed(new RunCommand(shooter::shootSpeedUp, shooter));
+        Button speedDown = new Button(() -> controller.getDpad() == 180);
+        speedDown.whenPressed(new RunCommand(shooter::shootSpeedDown, shooter));
         configureButtonBindings();
+
     }
 
     /**
@@ -44,7 +56,8 @@ public class RobotContainer {
      * then passing it to a
      * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+    }
 
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.

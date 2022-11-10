@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Button;
 
 public class DTXboxController {
     public enum RumbleSide {
@@ -39,14 +40,17 @@ public class DTXboxController {
     private static final Timer RUMBLE_TIMER = new Timer("Xbox_Rumble");
 
     private final XboxController controller;
+    
+    public final Button aButton = new Button(this::getAButton);
 
-    private long   leftTimeout;
-    private long   rightTimeout;
+    private long leftTimeout;
+    private long rightTimeout;
     private double leftPower;
     private double rightPower;
 
     public DTXboxController(int port) {
         this.controller = new XboxController(port);
+        //JoystickButton buttonA = new JoystickButton(controller, XboxController.Button.kA.value);
         RUMBLE_TIMER.scheduleAtFixedRate(new RumbleTask(), 10, 20);
     }
 
@@ -58,7 +62,7 @@ public class DTXboxController {
      * Sets the rumble on the controller
      *
      * @param duration
-     *        Time in seconds for the rumble to last
+     *                 Time in seconds for the rumble to last
      */
     public void startRumble(double duration) {
         startRumble(duration, 1);
@@ -68,10 +72,10 @@ public class DTXboxController {
      * Sets the rumble on the controller
      *
      * @param duration
-     *        Time in seconds for the rumble to last
+     *                 Time in seconds for the rumble to last
      * @param side
-     *        What side the ruble on <code>LEFT<code>, <code>RIGHT<code>,
-     *        <code>BOTH<code>
+     *                 What side the ruble on <code>LEFT<code>, <code>RIGHT<code>,
+     *                 <code>BOTH<code>
      */
     public void startRumble(double duration, RumbleSide side) {
         startRumble(duration, 1, side);
@@ -81,9 +85,9 @@ public class DTXboxController {
      * Sets the rumble on the controller
      *
      * @param duration
-     *        Time in seconds for the rumble to last
+     *                 Time in seconds for the rumble to last
      * @param power
-     *        Strength of rumble. Values range from 0-1
+     *                 Strength of rumble. Values range from 0-1
      */
     public void startRumble(double duration, double power) {
         startRumble(duration, power, RumbleSide.BOTH);
@@ -93,12 +97,12 @@ public class DTXboxController {
      * Sets the rumble on the controller
      *
      * @param duration
-     *        Time in seconds for the rumble to last
+     *                 Time in seconds for the rumble to last
      * @param power
-     *        Strength of rumble. Values range from 0-1
+     *                 Strength of rumble. Values range from 0-1
      * @param side
-     *        What side the ruble on <code>LEFT<code>, <code>RIGHT<code>,
-     *        <code>BOTH<code>
+     *                 What side the ruble on <code>LEFT<code>, <code>RIGHT<code>,
+     *                 <code>BOTH<code>
      */
     public void startRumble(double duration, double power, RumbleSide side) {
         long timeout = (long) (1_000 * duration) + System.currentTimeMillis();
@@ -123,8 +127,8 @@ public class DTXboxController {
      * Stops the rumble on a certain side
      *
      * @param side
-     *        What side to stop the ruble on <code>LEFT<code>,
-     *        <code>RIGHT<code>, <code>BOTH<code>
+     *             What side to stop the ruble on <code>LEFT<code>,
+     *             <code>RIGHT<code>, <code>BOTH<code>
      */
     public void stopRumble(RumbleSide side) {
         if (side.isLeft) {

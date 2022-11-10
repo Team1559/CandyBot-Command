@@ -16,13 +16,14 @@ public class Chassis extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
     public Chassis() {
         WPI_TalonSRX leftMotor = new WPI_TalonSRX(LEFT_DRIVE_MOTOR);
-          WPI_TalonSRX rightMotor = new WPI_TalonSRX(RIGHT_DRIVE_MOTOR);
-         differential = new DifferentialDrive(leftMotor, rightMotor);
+        WPI_TalonSRX rightMotor = new WPI_TalonSRX(RIGHT_DRIVE_MOTOR);
+        differential = new DifferentialDrive(leftMotor, rightMotor);
     }
 
     public void drive(double speedY, double steering) {
 
-        differential.arcadeDrive(speedY, steering);
+        //differential.arcadeDrive(speedY, steering);
+        differential.tankDrive(speedY, steering);
     }
 
     @Override

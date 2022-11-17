@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -30,6 +31,7 @@ public class Robot extends TimedRobot {
         // bindings, and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
+        
     }
 
     /**
@@ -57,7 +59,11 @@ public class Robot extends TimedRobot {
      * This function is called once each time the robot enters Disabled mode.
      */
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        CommandScheduler.getInstance().cancelAll();
+        System.out.println("Disabled Init");
+        m_robotContainer.totalReset();
+    }
 
     @Override
     public void disabledPeriodic() {}

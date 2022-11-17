@@ -42,7 +42,10 @@ public class DTXboxController {
     private final XboxController controller;
     
     public final Button aButton = new Button(this::getAButton);
-
+    public final Button bButton = new Button(this::getBButton);
+    public final Button xButton = new Button(this::getXButton);
+    public final Button yButton = new Button(this::getYButton);
+    
     private long leftTimeout;
     private long rightTimeout;
     private double leftPower;

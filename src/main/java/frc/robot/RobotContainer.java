@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DriveCommand;
@@ -27,6 +28,8 @@ public class RobotContainer {
     private final DriveCommand driveCommand;
     private final Shooter shooter;
     private final Command shooterStart;
+    private final Command shooterStop;
+    
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -35,18 +38,31 @@ public class RobotContainer {
     public RobotContainer() {
         // Configure the button bindings
         controller = new DTXboxController(0);
+
         chassis = new Chassis();
-        driveCommand = new DriveCommand(chassis, controller);
         shooter = new Shooter();
+        
+        driveCommand = new DriveCommand(chassis, controller);
         shooterStart = new RunCommand(shooter::shooterStart, shooter);
+        shooterStop = new InstantCommand(shooter::shooterStop, shooter);
+
         chassis.setDefaultCommand(driveCommand);
+
         controller.aButton.whenPressed(shooterStart);
+        controller.bButton.whenPressed(shooterStop);
+
         Button speedUp = new Button(() -> controller.getDpad() == 0);
-        speedUp.whenPressed(new RunCommand(shooter::shootSpeedUp, shooter));
         Button speedDown = new Button(() -> controller.getDpad() == 180);
-        speedDown.whenPressed(new RunCommand(shooter::shootSpeedDown, shooter));
+        speedUp.whenPressed(new InstantCommand(shooter::shootSpeedUp, shooter));
+        speedDown.whenPressed(new InstantCommand(shooter::shootSpeedDown, shooter));
+        
         configureButtonBindings();
 
+    }
+
+    public void totalReset(){
+        shooter.reset();
+        chassis.reset();
     }
 
     /**

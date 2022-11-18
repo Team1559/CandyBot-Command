@@ -60,9 +60,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        m_robotContainer.resetAll();
         CommandScheduler.getInstance().cancelAll();
         System.out.println("Disabled Init");
-        m_robotContainer.totalReset();
     }
 
     @Override

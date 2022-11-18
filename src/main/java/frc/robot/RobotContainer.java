@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Auger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -29,7 +30,9 @@ public class RobotContainer {
     private final Shooter shooter;
     private final Command shooterStart;
     private final Command shooterStop;
-    
+    private final Auger auger;
+    private final Command runAuger;
+    private final Command stopAuger;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -41,15 +44,20 @@ public class RobotContainer {
 
         chassis = new Chassis();
         shooter = new Shooter();
+        auger = new Auger();
         
         driveCommand = new DriveCommand(chassis, controller);
         shooterStart = new RunCommand(shooter::shooterStart, shooter);
         shooterStop = new InstantCommand(shooter::shooterStop, shooter);
+        runAuger = new RunCommand(auger::runAuger, auger);
+        stopAuger = new InstantCommand(auger::stopAuger, auger);
 
         chassis.setDefaultCommand(driveCommand);
 
         controller.aButton.whenPressed(shooterStart);
         controller.bButton.whenPressed(shooterStop);
+        controller.xButton.whenPressed(runAuger);
+        controller.yButton.whenPressed(stopAuger);
 
         Button speedUp = new Button(() -> controller.getDpad() == 0);
         Button speedDown = new Button(() -> controller.getDpad() == 180);
@@ -59,10 +67,9 @@ public class RobotContainer {
         configureButtonBindings();
 
     }
-
-    public void totalReset(){
-        shooter.reset();
-        chassis.reset();
+    public void resetAll(){
+            shooter.disShooter();
+            auger.disAuger();
     }
 
     /**

@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.InputCommand;
+import frc.robot.subsystems.Auger;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Auger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -33,6 +34,7 @@ public class RobotContainer {
     private final Auger auger;
     private final Command runAuger;
     private final Command stopAuger;
+    private final Command shooterTrigger;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -45,13 +47,14 @@ public class RobotContainer {
         chassis = new Chassis();
         shooter = new Shooter();
         auger = new Auger();
-        
+
         driveCommand = new DriveCommand(chassis, controller);
         shooterStart = new RunCommand(shooter::shooterStart, shooter);
         shooterStop = new InstantCommand(shooter::shooterStop, shooter);
         runAuger = new RunCommand(auger::runAuger, auger);
         stopAuger = new InstantCommand(auger::stopAuger, auger);
-
+        shooterTrigger = new InputCommand<>(controller::getRightTrigger, shooter::shooterTrigger, shooter);
+        shooter.setDefaultCommand(shooterTrigger);
         chassis.setDefaultCommand(driveCommand);
 
         controller.aButton.whenPressed(shooterStart);
@@ -63,13 +66,14 @@ public class RobotContainer {
         Button speedDown = new Button(() -> controller.getDpad() == 180);
         speedUp.whenPressed(new InstantCommand(shooter::shootSpeedUp, shooter));
         speedDown.whenPressed(new InstantCommand(shooter::shootSpeedDown, shooter));
-        
+
         configureButtonBindings();
 
     }
-    public void resetAll(){
-            shooter.disShooter();
-            auger.disAuger();
+
+    public void resetAll() {
+        shooter.disShooter();
+        auger.disAuger();
     }
 
     /**

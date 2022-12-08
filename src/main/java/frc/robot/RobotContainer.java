@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DriveCommand;
@@ -35,7 +36,8 @@ public class RobotContainer {
     private final Command runAuger;
     private final Command stopAuger;
     private final Command shooterTrigger;
-
+    private final ParallelCommandGroup shootCandyCommandGroup;
+    private final ParallelCommandGroup shootCandyCommandGroupButCooler;
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
@@ -56,11 +58,15 @@ public class RobotContainer {
         shooterTrigger = new InputCommand<>(controller::getRightTrigger, shooter::shooterTrigger, shooter);
         shooter.setDefaultCommand(shooterTrigger);
         chassis.setDefaultCommand(driveCommand);
-
+        shootCandyCommandGroup = new ParallelCommandGroup(new RunCommand(shooter::spinShooter, shooter), new InstantCommand(auger::runAuger, auger));
+        shootCandyCommandGroupButCooler = new ParallelCommandGroup(new InstantCommand(shooter::shooterStop, shooter), new InstantCommand(auger::stopAuger, auger));
+        
         controller.aButton.whenPressed(shooterStart);
         controller.bButton.whenPressed(shooterStop);
         controller.xButton.whenPressed(runAuger);
         controller.yButton.whenPressed(stopAuger);
+        controller.rightBumper.whenPressed(shootCandyCommandGroup);
+        controller.rightBumper.whenReleased(shootCandyCommandGroupButCooler);
 
         Button speedUp = new Button(() -> controller.getDpad() == 0);
         Button speedDown = new Button(() -> controller.getDpad() == 180);

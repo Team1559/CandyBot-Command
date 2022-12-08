@@ -45,7 +45,7 @@ public class DTXboxController {
     public final Button bButton = new Button(this::getBButton);
     public final Button xButton = new Button(this::getXButton);
     public final Button yButton = new Button(this::getYButton);
-    
+    public final Button rightBumper = new Button(this::getRightBumper);
     private long leftTimeout;
     private long rightTimeout;
     private double leftPower;

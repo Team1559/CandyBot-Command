@@ -23,7 +23,7 @@ public class Chassis extends SubsystemBase {
     public void drive(double speedY, double steering) {
 
         //differential.arcadeDrive(speedY, steering);
-        differential.tankDrive(speedY, steering);
+        differential.tankDrive(speedY, -1*(steering));
     }
 
     @Override
